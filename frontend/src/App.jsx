@@ -26,7 +26,10 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState(loadFavorites);
   const [loadingProducts, setLoadingProducts] = useState(true);
-  const [showToast, setShowToast] = useState(false);
+  const [shakeTrigger, setShakeTrigger] = useState(0);
+  const [showToast, setShowToast] = useState(() => {
+    return localStorage.getItem('estampas-ai-toast-closed') !== 'true';
+  });
 
   useEffect(() => {
     async function load() {
@@ -53,13 +56,7 @@ export default function App() {
         next.delete(productId);
       } else {
         next.add(productId);
-        
-        // Show toast only on the very first favorite action
-        const hasSeenToast = localStorage.getItem('estampas-ai-toast-shown');
-        if (!hasSeenToast) {
-          setShowToast(true);
-          localStorage.setItem('estampas-ai-toast-shown', 'true');
-        }
+        setTimeout(() => setShakeTrigger(prev => prev + 1), 0);
       }
       return next;
     });
@@ -90,7 +87,11 @@ export default function App() {
         <Toast 
           message="Adicione estampas aos seus favoritos para montar seu catálogo *único*"
           visible={showToast}
-          onClose={() => setShowToast(false)}
+          shakeTrigger={shakeTrigger}
+          onClose={() => {
+            setShowToast(false);
+            localStorage.setItem('estampas-ai-toast-closed', 'true');
+          }}
         />
       </main>
 
