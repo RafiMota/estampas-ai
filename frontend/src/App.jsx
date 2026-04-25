@@ -3,6 +3,7 @@ import { fetchProducts } from './api';
 import Navbar from './components/Navbar';
 import Gallery from './components/Gallery';
 import ForMe from './components/ForMe';
+import Toast from './components/Toast';
 
 const FAVORITES_KEY = 'estampas-ai-favorites';
 
@@ -25,6 +26,7 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState(loadFavorites);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -51,6 +53,13 @@ export default function App() {
         next.delete(productId);
       } else {
         next.add(productId);
+        
+        // Show toast only on the very first favorite action
+        const hasSeenToast = localStorage.getItem('estampas-ai-toast-shown');
+        if (!hasSeenToast) {
+          setShowToast(true);
+          localStorage.setItem('estampas-ai-toast-shown', 'true');
+        }
       }
       return next;
     });
@@ -78,6 +87,11 @@ export default function App() {
             allProducts={products}
           />
         )}
+        <Toast 
+          message="Adicione estampas aos seus favoritos para montar seu catálogo *único*"
+          visible={showToast}
+          onClose={() => setShowToast(false)}
+        />
       </main>
 
       <footer className="border-t border-gray-200 bg-white mt-16">
