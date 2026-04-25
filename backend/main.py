@@ -18,6 +18,8 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import chromadb
+import subprocess
+import sys
 
 # ── Configurações ──────────────────────────────────────────
 IMAGES_DIR = Path(__file__).resolve().parent.parent / "estampas"
@@ -76,6 +78,22 @@ class RecommendResponse(BaseModel):
 
 
 # ── Endpoints ─────────────────────────────────────────────
+@app.get("/init-db")
+async def init_db():
+    """Endpoint para disparar a vetorização remotamente."""
+    try:
+        # Chama o script vectorize.py como um processo separado
+        result = subprocess.run(
+            [sys.executable, "backend/vectorize.py"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return {"status": "sucesso", "output": result.stdout}
+    except Exception as e:
+        return {"status": "erro", "message": str(e)}
+
+
 @app.get("/products", response_model=list[Product])
 async def list_products():
     """Lista todos os produtos do catálogo."""
