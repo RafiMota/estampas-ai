@@ -9,12 +9,11 @@ export default function Navbar({ activeTab, onTabChange, favoriteCount }) {
         <div className="flex items-center justify-between h-16">
 
           <button onClick={() => onTabChange('catalog')} className="cursor-pointer shrink-0">
-            <span
-              className="text-2xl font-black tracking-tight text-gray-900 leading-none"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              go<span className="text-red-500">case</span>
-            </span>
+            <img
+              src="/logo-gocase.png"
+              alt="gocase"
+              className="h-12 w-auto"
+            />
           </button>
 
           <div className="flex items-center gap-1 bg-gray-100 rounded-full p-1">

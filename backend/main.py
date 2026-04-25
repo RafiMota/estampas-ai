@@ -206,6 +206,8 @@ async def recommend(request: RecommendRequest):
     return RecommendResponse(recommendations=recommendations)
 
 
+
+
 @app.get("/images/{filename:path}")
 async def serve_image(filename: str):
     """Serve as imagens das estampas."""
@@ -215,7 +217,16 @@ async def serve_image(filename: str):
     return FileResponse(file_path)
 
 
+# ── Servir Frontend (Apenas se o build existir) ───────────
+# Deve ser a ÚLTIMA rota definida
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
+
 # ── Inicialização ─────────────────────────────────────────
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=(port == 8000))

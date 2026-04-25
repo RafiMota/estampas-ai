@@ -83,9 +83,7 @@ export default function App() {
       <footer className="border-t border-gray-200 bg-white mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-lg font-black tracking-tight text-gray-900" style={{ fontFamily: 'var(--font-display)' }}>
-              go<span className="text-red-500">case</span>
-            </span>
+            <img src="/logo-gocase.png" alt="gocase" className="h-10 w-auto" />
             <p className="text-xs text-gray-400">
               MVP — Recomendação Visual com CLIP + ChromaDB • GoHacks 2026
             </p>
